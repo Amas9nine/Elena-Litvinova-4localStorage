@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useLayoutEffect, useState } from 'react';
+import Header from '../components/Header/Header';
 
 import { InputPlus } from '../components/InputPlus';
 import { InputTask } from '../components/InputTask';
@@ -10,16 +11,38 @@ export const generateId = () => (
 );
 
 export const App = () => {
-  const tasks = [{
-    id: 12312,
-    title: 'sadfdas'
-  }];
+  const [tasks, setTasks] = useState(JSON.parse(localStorage.getItem("todoTest4")) ||
+    []);
+
+  useLayoutEffect(() => {
+    localStorage.setItem("todoTest4", JSON.stringify(tasks))
+  }, [tasks])
+
+  const onAdd = (title) => {
+    if (title) {
+      setTasks([{ id: generateId(), title }, ...tasks])
+    }
+  }
+
+  const onDelete = (id) => {
+    setTasks(tasks.filter(item => item.id !== id))
+  }
+
+  const onEdit = (id, value) => {
+    setTasks(tasks.map(item => item.id === id ? {
+      ...item,
+      title: value
+    }
+      : item))
+  }
 
   return (
     <article className={styles.article}>
-      <h1 className={styles.articleTitle}>To Do App</h1>
+      <h1 className={styles.articleTitle}>
+        <Header tasks={tasks} />
+      </h1>
       <section className={styles.articleSection}>
-          <InputPlus />
+        <InputPlus onAdd={onAdd} />
       </section>
       <section className={styles.articleSection}>
         {tasks.length <= 0 && (
@@ -29,6 +52,9 @@ export const App = () => {
           <InputTask
             key={task.id}
             title={task.title}
+            id={task.id}
+            onDelete={onDelete}
+            onEdit={onEdit}
           />
         ))}
       </section>

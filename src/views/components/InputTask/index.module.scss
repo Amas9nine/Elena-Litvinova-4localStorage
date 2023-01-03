@@ -40,7 +40,9 @@
         box-shadow: 0 4px 0 -3px #3F72AF;
     }
 
-    &Edit, &Remove, &Save {
+    &Edit,
+    &Remove,
+    &Save {
         display: block;
         height: 100%;
         width: 50px;
@@ -64,5 +66,9 @@
 
     &Remove {
         background: url('./images/trash.svg') no-repeat center center;
+    }
+
+    .checkedStyle {
+        text-decoration: line-through;
     }
 }
